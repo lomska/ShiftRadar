@@ -2225,10 +2225,8 @@ def main():
             "The app treats each country as a data point and each year as a time step."
         )
         st.caption(
-            "**Period & Country Comparisons** is the main tab. See how things stood decades ago and how they stand "
-            "now, and how countries and regions have shifted in the world. You can see where they improved or fell "
-            "behind on key measures of the economy and society, both in absolute terms and relative to other "
-            "countries."
+            "Use the **Period & Country Comparisons** tab to see how things stood decades ago and where countries "
+            "and regions have improved or fallen behind on key measures of the economy and society."
         )
         st.caption(
             "**Country Profiles** puts a country's full available history on one page. The indicator set gives a "
