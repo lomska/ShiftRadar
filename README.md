@@ -1,4 +1,4 @@
-# Global Shifts Explorer
+# ShiftRadar
 
 **Live app: [global-shifts-explorer.streamlit.app](https://global-shifts-explorer.streamlit.app/)**
 
