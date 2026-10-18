@@ -2225,12 +2225,14 @@ def main():
             "The app treats each country as a data point and each year as a time step."
         )
         st.caption(
-            "Use the **Period & Country Comparisons** tab to see how things stood decades ago and where countries "
-            "and regions have improved or fallen behind on key measures of the economy and society."
+            "**Period & Country Comparisons** is the main tab. See how things stood decades ago and how they stand "
+            "now, and how countries and regions have shifted in the world. You can see where they improved or fell "
+            "behind on key measures of the economy and society, both in absolute terms and relative to other "
+            "countries."
         )
         st.caption(
-            "**Country Profiles** puts a country's current state and all its available history on one page. The "
-            "indicators cover enough ground to give a well-rounded picture of its economic and social state."
+            "**Country Profiles** puts a country's full available history on one page. The indicator set gives a "
+            "well-rounded picture of its economic and social state."
         )
         if st.button("Data sources and licences"):
             show_data_sources()
