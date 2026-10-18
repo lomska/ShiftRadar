@@ -1,6 +1,6 @@
 # ShiftRadar
 
-**Live app: [global-shifts-explorer.streamlit.app](https://global-shifts-explorer.streamlit.app/)**
+**Live app: [shiftradar.streamlit.app](https://shiftradar.streamlit.app/)**
 
 This Streamlit app gathers a curated set of publicly available indicators, from fiscal figures to self-reported
 happiness, so you can quickly explore how the world has changed over recent decades. Each country is treated as a data point, and each year as a time step. Watching how countries spread
