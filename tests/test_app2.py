@@ -857,20 +857,20 @@ def run():
         at.selectbox(key="dist_indicator_Demographics").set_value("Birth rate").run()
         assert dist_slider("Birth rate").value == (1965, 2040), dist_slider("Birth rate").value
         assert at.session_state[app_mod.DIST_USER_YEARS] == (1965, 2040)
-        # --- Distributions: start / end year fields, in step with the slider both ways ---
+        # --- Distributions: start / end year dropdowns, in step with the slider both ways ---
         def year_fields(label):
-            return (at.number_input(key=f"dist_year_start_{label}").value,
-                    at.number_input(key=f"dist_year_end_{label}").value)
+            return (at.selectbox(key=f"dist_year_start_{label}").value,
+                    at.selectbox(key=f"dist_year_end_{label}").value)
 
         assert year_fields("Birth rate") == (1965, 2040)  # the fields follow the slider...
-        at.number_input(key="dist_year_start_Birth rate").set_value(1980).run()
-        check(at, "distributions: start year typed")
+        at.selectbox(key="dist_year_start_Birth rate").set_value(1980).run()
+        check(at, "distributions: start year picked")
         assert dist_slider("Birth rate").value == (1980, 2040)  # ...and the slider follows a field
         assert at.session_state[app_mod.DIST_USER_YEARS] == (1980, 2040)
         assert not selection_captions(), selection_captions()
         table = next(d for d in at.dataframe if "Change" in d.value.columns).value
         assert [c for c in table.columns if str(c).strip().isdigit()] == ["1980", "2040"], list(table.columns)
-        at.number_input(key="dist_year_end_Birth rate").set_value(1970).run()  # end before start: swapped
+        at.selectbox(key="dist_year_end_Birth rate").set_value(1970).run()  # end before start: swapped
         assert dist_slider("Birth rate").value == (1970, 1980) and year_fields("Birth rate") == (1970, 1980)
         dist_slider("Birth rate").set_value((2000, 2010)).run()
         assert year_fields("Birth rate") == (2000, 2010)
@@ -917,7 +917,7 @@ def run():
 
         selectboxes = at.selectbox
         for sb in selectboxes:
-            if sb.key == "trends_entity":  # code-valued (format_func shows names); tested above
+            if sb.key == "trends_entity" or str(sb.key).startswith("dist_year_"):  # tested above
                 continue
             sb.set_value(sb.options[0]).run()
             check(at, f"selectbox '{sb.label}' changed")

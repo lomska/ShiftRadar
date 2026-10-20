@@ -1792,6 +1792,11 @@ def _signed_log_z(v: pd.Series, max_abs: float):
     return _slog(v), (-m, m, 0.0), dict(tickvals=ticks, ticktext=ticktext)
 
 
+# The maps don't zoom on the mouse wheel, so scrolling the page over a map scrolls the page; zoom
+# stays available through the +/- and reset buttons in the map's toolbar.
+MAP_CONFIG = {"scrollZoom": False}
+
+
 def _style_map(fig: go.Figure) -> go.Figure:
     """No title of its own (html_title draws it above the map mode toggle). Countries without data
     stay light gray."""
@@ -2077,14 +2082,19 @@ def tab_distributions(data: pd.DataFrame, countries: pd.DataFrame, errors: dict[
         st.session_state[key] = remembered_years(remembered, years, (default_a, default_b), split, projected)
     else:
         st.session_state.setdefault(key, (default_a, default_b))
-    st.session_state[start_key], st.session_state[end_key] = st.session_state[key]  # the fields follow the slider
-    start_col, end_col, reset_col, _ = st.columns([1, 1, 1, 3], vertical_alignment="bottom")
-    year_field = dict(min_value=years[0], max_value=years[-1], step=1, format="%d",
+    # The dropdowns follow the slider. They list only years with data, so the slider's position is
+    # snapped onto one (it already is once remembered: remember() snaps).
+    st.session_state[start_key], st.session_state[end_key] = (nearest_year(int(y), years)
+                                                              for y in st.session_state[key])
+    start_col, end_col, reset_col, note_col = st.columns([1, 1, 1, 3], vertical_alignment="bottom")
+    year_field = dict(options=years,
                       on_change=lambda: remember((st.session_state[start_key], st.session_state[end_key])))
-    start_col.number_input("Start year", key=start_key, **year_field)
-    end_col.number_input("End year", key=end_key, **year_field)
+    start_col.selectbox("Start year", key=start_key, **year_field)
+    end_col.selectbox("End year", key=end_key, **year_field)
     reset_col.button("Reset to default", key=f"dist_years_reset_{label}", on_click=reset_years,
                      disabled=not remembered, help="Return every indicator to its own default years.")
+    if years[-1] > split:  # this indicator has projections: say from which year
+        note_col.caption(f"From {int(split + 0.5)} onward, values are projections.")
     ya, yb = st.slider("Select two years to compare country distributions", min_value=years[0],
                        max_value=years[-1], step=1, key=key, label_visibility="collapsed",
                        on_change=lambda: remember(st.session_state[key]))
@@ -2121,14 +2131,15 @@ def tab_distributions(data: pd.DataFrame, countries: pd.DataFrame, errors: dict[
     if map_mode == "change":
         with map_title:
             html_title(f"{label}, change {ya}–{yb}", "percentage points" if suffix == "%" else unit)
-        st.plotly_chart(change_choropleth(wide[yb] - wide[ya], names, spec, unit=change_unit), width="stretch")
+        st.plotly_chart(change_choropleth(wide[yb] - wide[ya], names, spec, unit=change_unit), width="stretch",
+                        config=MAP_CONFIG)
     else:
         with map_title:
             html_title(f"{label}, {map_mode}", unit)
         year_vals = wide[map_mode].dropna()
         st.plotly_chart(indicator_choropleth(
             wide[map_mode], names, spec, z_range=(float(year_vals.min()), float(year_vals.max()))),
-            width="stretch")
+            width="stretch", config=MAP_CONFIG)
     source_footer(source=source)
 
     # 3. Table: both years plus the change between them, headed like the charts
