@@ -39,7 +39,7 @@ APP_NAME = "WorldRadar"  # browser tab and page heading
 
 st.set_page_config(
     page_title=APP_NAME,
-    page_icon="\U0001F30D",
+    page_icon="\U0001F310",
     layout="wide",
     initial_sidebar_state="collapsed",
 )
