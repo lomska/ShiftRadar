@@ -695,7 +695,9 @@ def run():
         intro = at.caption[0].value
         assert intro.startswith("This app gathers a curated set of publicly available indicators"), intro
         about = [c.value for c in at.sidebar.caption]
-        assert len(about) == 3 and about[1].startswith("**Country Profiles** follows a single country"), about
+        assert len(about) == 3, about
+        assert about[1].startswith("Use the **Period & Country Comparisons** tab"), about
+        assert about[2].startswith("**Country Profiles** puts a country's full available history on one page"), about
         # No section breaks on the Distributions tab; its four blocks (histogram, map, Country Details,
         # box plot) are each headed by html_title(), in that order, above any toggles.
         assert not any('role="heading"' in m.value for m in at.tabs[0].markdown)
